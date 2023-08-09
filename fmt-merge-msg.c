@@ -15,6 +15,7 @@
 #include "commit-reach.h"
 #include "gpg-interface.h"
 #include "wildmatch.h"
+#include "sequencer.h"
 
 static int use_branch_desc;
 static int suppress_dest_pattern_seen;
@@ -710,6 +711,9 @@ int fmt_merge_msg(struct strbuf *in, struct strbuf *out,
 				 head, &rev, opts, out);
 		release_revisions(&rev);
 	}
+
+	if (opts->signoff)
+		append_signoff(out, ignore_non_trailer(out->buf, out->len), 0);
 
 	strbuf_complete_line(out);
 	free(current_branch_to_free);

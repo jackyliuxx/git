@@ -70,4 +70,15 @@ test_expect_success 'git merge --no-signoff flag cancels --signoff flag' '
 	test_cmp expected-unsigned actual
 '
 
+# Test with --signoff and --no-commit flag
+test_expect_success 'git merge --signoff --no-commit adds a sign-off line' '
+	git checkout main &&
+	test_commit main-branch-5 file5 5 &&
+	git checkout other-branch &&
+	git merge main --signoff --no-commit &&
+	git merge --continue &&
+	git cat-file commit HEAD | sed -e "1,/^\$/d" >actual &&
+	test_cmp expected-signed actual
+'
+
 test_done
